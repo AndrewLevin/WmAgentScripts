@@ -20,7 +20,7 @@ def explain_failure(exitcode,failure):
     elif exitcode == '8028':
         return "due to FallbackFileOpenErrors"
     elif exitcode == 61304:
-        return "due to running too long/soft kill failed"
+        return "due to (running too long + soft kill failed) or (job eviction)"
     elif exitcode == 60318:
         return "due to a DQM server upload failure"
     elif failure['details'] != None and 'Adding last ten lines of CMSSW stdout:' not in failure['details']:
@@ -87,8 +87,10 @@ def print_job_failure_information(job_failure_information):
         firsttime=True
         for task in wf['task_dict']:
             sum=0        
+
             for exitcode in task['failures'].keys():
                 sum+=task['failures'][exitcode]['number']
+
             if firsttime_wf and task['nfailurestot'] != sum and 'CleanupUnmerged' not in task['task_name'] and 'LogCollect' not in task['task_name']:
                 istherefailureinformation=True
                 return_string=return_string+"there were the following other failures\n"    

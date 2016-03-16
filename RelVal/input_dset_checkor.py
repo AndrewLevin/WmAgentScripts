@@ -51,11 +51,14 @@ def main():
         elif "T1" in site:
             site_disk = site + "_Disk"
         else:
-            os.system('echo '+site+' | mail -s \"input_dset_checker error 1\" andrew.m.levin@vanderbilt.edu')
+            os.system('echo '+site+' | mail -s \"input_dset_checkor.py error 1\" andrew.m.levin@vanderbilt.edu')
             print "Neither T1 nor T2 is in site name, exiting"
             sys.exit(1)
 
         if site == "T2_CH_CERN_T0":
+            site_disk = "T2_CH_CERN"
+
+        if site == "T2_CH_CERN_AI":
             site_disk = "T2_CH_CERN"
 
         #print batch
@@ -80,8 +83,10 @@ def main():
 
                 print wf[0]
 
+                headers = {"Content-type": "application/json", "Accept": "application/json"}
+
                 conn  =  httplib.HTTPSConnection('cmsweb.cern.ch', cert_file = os.getenv('X509_USER_PROXY'), key_file = os.getenv('X509_USER_PROXY'))
-                r1=conn.request("GET",'/reqmgr/reqMgr/request?requestName='+wf[0])
+                r1=conn.request("GET",'/reqmgr2/data/request/'+wf[0],headers=headers)
                 r2=conn.getresponse()
 
                 schema = json.loads(r2.read())
@@ -110,7 +115,7 @@ def main():
                                     #this block (/DoubleMu/...) is not registered in phedex, so it cannot be subscribed to any site
                                     if block ==  "/DoubleMu/Run2011A-ZMu-08Nov2011-v1/RAW-RECO#93c53d22-25b2-11e1-8c62-003048f02c8a":
                                         continue
-                                    
+
                                     isblockatsite = utils.checkIfBlockIsAtASite("cmsweb.cern.ch",block,site_disk)
 
                                     if not isblockatsite:
@@ -140,8 +145,10 @@ def main():
 
                 print wf[0]
 
+                headers = {"Content-type": "application/json", "Accept": "application/json"}
+
                 conn  =  httplib.HTTPSConnection('cmsweb.cern.ch', cert_file = os.getenv('X509_USER_PROXY'), key_file = os.getenv('X509_USER_PROXY'))
-                r1=conn.request("GET",'/reqmgr/reqMgr/request?requestName='+wf[0])
+                r1=conn.request("GET",'/reqmgr2/data/request/'+wf[0],headers=headers)
                 r2=conn.getresponse()
 
                 schema = json.loads(r2.read())

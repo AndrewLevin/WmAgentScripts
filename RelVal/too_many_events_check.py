@@ -96,7 +96,7 @@ def too_many_events_check(wf_name):
             outputEvents = getOutputEvents(dbsApi, dataset, verb = False)
             
             if outputEvents > inputEvents :
-                os.system('echo '+wf_name+' | mail -s \"too_many_events_check error 2\" andrew.m.levin@vanderbilt.edu')
+                os.system('echo '+wf_name+' | mail -s \"too_many_events_check.py error 2\" andrew.m.levin@vanderbilt.edu')
                 sys.exit(1)
 
 
@@ -116,11 +116,11 @@ def too_many_events_check(wf_name):
 
                 outputEvents = getOutputEvents(dbsApi, dataset, verb = False)
                 if outputEvents > inputEvents :
-                    os.system('echo '+wf_name+' | mail -s \"too_many_events_check error 3\" andrew.m.levin@vanderbilt.edu')
+                    os.system('echo '+wf_name+' | mail -s \"too_many_events_check.py error 3\" andrew.m.levin@vanderbilt.edu')
                     sys.exit(1)
 
         elif 'BlockWhitelist' in schema['Task1']:
-            os.system('echo '+wf_name+' | mail -s \"too_many_events_check error 4\" andrew.m.levin@vanderbilt.edu')
+            os.system('echo '+wf_name+' | mail -s \"too_many_events_check error.py 4\" andrew.m.levin@vanderbilt.edu')
             sys.exit(1)
 
             # Most likely MC, since there is no run whitelist
@@ -133,6 +133,6 @@ def too_many_events_check(wf_name):
 
                 outputEvents = getOutputEvents(dbsApi, dataset)
                 if outputEvents > inputEvents :
-                    os.system('echo '+wf_name+' | mail -s \"too_many_events_check error 5\" andrew.m.levin@vanderbilt.edu')
+                    os.system('echo '+wf_name+' | mail -s \"too_many_events_check.py error 5\" andrew.m.levin@vanderbilt.edu')
                     sys.exit(1)
 

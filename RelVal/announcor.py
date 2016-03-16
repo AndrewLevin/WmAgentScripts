@@ -67,12 +67,25 @@ def main():
             n_workflows=n_workflows+1
             conn  =  httplib.HTTPSConnection(url, cert_file = os.getenv('X509_USER_PROXY'), key_file = os.getenv('X509_USER_PROXY'))
             r1=conn.request('GET','/reqmgr2/data/request?name='+wf[0],headers={"Accept": "application/json"})
-            #r1=conn.request('GET','/couchdb/wmstats/_all_docs?keys=["'+wf[0]+'"]&include_docs=true')
             r2=conn.getresponse()
             data = r2.read()
             if r2.status != 200:
-                os.system('echo \"'+wf[0]+'\" | mail -s \"announcor.py error 1\" andrew.m.levin@vanderbilt.edu --')
-                sys.exit(0)
+                time.sleep(10)
+                #try it again
+                conn  =  httplib.HTTPSConnection(url, cert_file = os.getenv('X509_USER_PROXY'), key_file = os.getenv('X509_USER_PROXY'))
+                r1=conn.request('GET','/reqmgr2/data/request?name='+wf[0],headers={"Accept": "application/json"})
+                r2=conn.getresponse()
+                data = r2.read()
+                if r2.status != 200:
+                    time.sleep(10)
+                    #try it a third time
+                    conn  =  httplib.HTTPSConnection(url, cert_file = os.getenv('X509_USER_PROXY'), key_file = os.getenv('X509_USER_PROXY'))
+                    r1=conn.request('GET','/reqmgr2/data/request?name='+wf[0],headers={"Accept": "application/json"})
+                    r2=conn.getresponse()
+                    data = r2.read()
+                    if r2.status != 200:
+                        os.system('echo \"'+wf[0]+'\" | mail -s \"announcor.py error 1\" andrew.m.levin@vanderbilt.edu')
+                        sys.exit(0)
             s = json.loads(data)
         
             for status in s['result'][0][wf[0]]['RequestTransition']:
@@ -87,7 +100,7 @@ def main():
         if n_workflows != n_completed:
             continue
 
-        #string="2015_09_30_1_0"
+        #string="2016_03_12_3_0"
 
         #if not (string.split('_')[0] == batch_dict["useridyear"] and string.split('_')[1] == batch_dict["useridmonth"] and string.split('_')[2] == batch_dict["useridday"] and string.split('_')[3] == str(batch_dict["useridnum"]) and string.split('_')[4] == str(batch_dict["batch_version_num"])):
         #    continue
@@ -124,7 +137,7 @@ def main():
         if ret == 0:
             os.system("rm "+userid+".txt")
         else:
-            os.system('echo \"'+userid+'\" | mail -s \"announcement_loop.py error 2\" andrew.m.levin@vanderbilt.edu')
+            os.system('echo \"'+userid+'\" | mail -s \"announcor.py error 2\" andrew.m.levin@vanderbilt.edu')
             sys.exit(0)
 
         dsets_list = []    

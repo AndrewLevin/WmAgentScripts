@@ -64,9 +64,11 @@ def main():
         n_completed=0
         for wf in wfs:
 
+            
             #print "andrew debug 1"
 
             n_workflows=n_workflows+1
+
             conn  =  httplib.HTTPSConnection(url, cert_file = os.getenv('X509_USER_PROXY'), key_file = os.getenv('X509_USER_PROXY'))
 
             #print wf[0]
@@ -76,19 +78,37 @@ def main():
             r1=conn.request('GET','/reqmgr2/data/request?name='+wf[0],headers={"Accept": "application/json"})
             #r1=conn.request('GET','/reqmgr2/data/request?name=heli_RVCMSSW_7_5_3ZTT_13_PUpmx25ns__FastSim_150925_132658_5738',headers={"Accept": "application/json"})
             r2=conn.getresponse()
+
             data = r2.read()
+
+            if r2.status != 200:
+                #try it again
+                time.sleep(10)
+                conn  =  httplib.HTTPSConnection(url, cert_file = os.getenv('X509_USER_PROXY'), key_file = os.getenv('X509_USER_PROXY'))
+                r1=conn.request('GET','/reqmgr2/data/request?name='+wf[0],headers={"Accept": "application/json"})
+                r2=conn.getresponse()
+                data = r2.read()
+                if r2.status != 200:
+                    #try it a third time
+                    time.sleep(10)
+                    conn  =  httplib.HTTPSConnection(url, cert_file = os.getenv('X509_USER_PROXY'), key_file = os.getenv('X509_USER_PROXY'))
+                    r1=conn.request('GET','/reqmgr2/data/request?name='+wf[0],headers={"Accept": "application/json"})
+                    r2=conn.getresponse()
+                    data = r2.read()
+                    if r2.status != 200:
+                        os.system('echo '+wf[0]+' | mail -s \"create_monitoring_page.py error 1\" andrew.m.levin@vanderbilt.edu')
+                        sys.exit(1)
 
             s = json.loads(data)
 
             #print "andrew debug 3"
 
-            if r2.status != 200:
-                os.system('echo '+wf[0]+' | mail -s \"monitorying.py error 1\" andrew.m.levin@vanderbilt.edu')
-                sys.exit(1)
-                
             #print s['rows'][0]['doc']['request_status']
             #print len(s['rows'][0]['doc']['request_status'])
-
+            
+            if s['result'] == []:
+                os.system('echo '+wf[0]+' | mail -s \"create_monitoring_page.py error 4\" andrew.m.levin@vanderbilt.edu')
+                sys.exit(1)
 
             for status in s['result'][0][wf[0]]['RequestTransition']:
 
@@ -103,12 +123,12 @@ def main():
         print "    n_completed = " + str(n_completed)
         print ""
         print ""
-        
+
     sys.stdout.flush()    
     ret=os.system("cp relval_monitor_most_recent_50_batches.txt /afs/cern.ch/user/r/relval/webpage/relval_monitor_most_recent_50_batches.txt")
 
     if ret != 0:
-        os.system('echo \"'+userid+'\" | mail -s \"monitoring_loop.py error 2\" andrew.m.levin@vanderbilt.edu')
+        os.system('echo \"'+userid+'\" | mail -s \"create_monitoring_page.py error 2\" andrew.m.levin@vanderbilt.edu')
 
 if __name__ == "__main__":
     main()
