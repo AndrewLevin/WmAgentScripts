@@ -250,7 +250,7 @@ def main():
             if "MinimumBias" in dset.split('/')[1] and "SiStripCalMinBias" in dset.split('/')[2] and dset.split('/')[3] != "ALCARECO":
                 dsets_cern_disk_list.append(dset)
 
-        result=utils.makeReplicaRequest("cmsweb.cern.ch", "T2_CH_CERN", dsets_cern_disk_list, "relval datasets",group="RelVal")
+        result=utils.makeReplicaRequest("cmsweb.cern.ch", "T2_CH_CERN", dsets_cern_disk_list, "relval datasets",group="RelVal",priority="high")
         if result != None:
             phedexid = result['phedex']['request_created'][0]['id']
             utils.approveSubscription("cmsweb.cern.ch",phedexid)
@@ -263,7 +263,7 @@ def main():
         result=utils.makeMoveRequest("cmsweb.cern.ch", "T0_CH_CERN_MSS", dsets_list, "relval datasets", group = "RelVal")
         if result != None:
             phedexid = result['phedex']['request_created'][0]['id']
-            #even if you disapprove the subscription at the source, it will still deleted the datasets that are at the source but not subscribed their
+            #even if you disapprove the subscription at the source, it will still delete the datasets that are at the source but not subscribed their
             utils.disapproveSubscription("cmsweb.cern.ch",phedexid,["T2_CH_CERN"])
             utils.disapproveSubscription("cmsweb.cern.ch",phedexid,["T1_US_FNAL_Disk"])
             utils.disapproveSubscription("cmsweb.cern.ch",phedexid,["T1_FR_CCIN2P3_Disk"])
