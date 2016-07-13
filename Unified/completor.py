@@ -30,6 +30,9 @@ def completor(url, specific):
     ## just take it in random order so that not always the same is seen
     random.shuffle( wfs )
 
+    max_per_round = UC.get('max_per_round').get('completor',None)
+    if max_per_round and not specific: wfs = wfs[:max_per_round]
+
     ## by workflow a list of fraction / timestamps
     completions = json.loads( open('%s/completions.json'%monitor_dir).read())
     
@@ -61,6 +64,7 @@ def completor(url, specific):
 
     set_force_complete = set()
 
+
     for wfo in wfs:
         if specific and not specific in wfo.name: continue
 
@@ -80,11 +84,6 @@ def completor(url, specific):
                     skip=True
                     wfi.notifyRequestor("The workflow %s was force completed by request of %s"%(wfo.name,user), do_batch=False)
                     wfi.sendLog('completor','%s is asking for %s to be force complete'%(user,wfo.name))
-                    if user == 'mcm' and use_mcm:
-                        for pid in wfi.getPrepIDs():
-                            mcm.delete('/restapi/requests/forcecomplete/%s'%pid)
-                    #sendEmail('completor test','not force completing automatically, you have to go back to it')
-                    #skip=False
                     break
     
         if wfo.status.startswith('assistance'): skip = True

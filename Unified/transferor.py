@@ -204,6 +204,11 @@ def transferor(url ,specific = None, talk=True, options=None):
     went_over_budget=False
     destination_cache = {}
     no_goes = set()
+
+    max_per_round = UC.get('max_per_round').get('transferor',None)
+    if max_per_round and not spec:
+        wfs_and_wfh = wfs_and_wfh[:max_per_round]
+    
     for (wfo,wfh) in wfs_and_wfh:
         print wfo.name,"to be transfered with priority",wfh.request['RequestPriority']
 
@@ -242,7 +247,7 @@ def transferor(url ,specific = None, talk=True, options=None):
             
         allowed_secondary = set()
         for campaign in wfh.getCampaigns():
-            if 'secondaries' in CI.campaigns[campaign]:
+            if campaign in CI.campaigns and 'secondaries' in CI.campaigns[campaign]:
                 allowed_secondary.update( CI.campaigns[campaign]['secondaries'] )
         if secondary:
             if (secondary and allowed_secondary) and (set(secondary)&allowed_secondary!=set(secondary)):

@@ -129,6 +129,8 @@ def checkor(url, spec=None, options=None):
     random.shuffle( wfs )
 
     print len(wfs),"to consider, pausing for",sleep_time
+    max_per_round = UC.get('max_per_round').get('checkor',None)
+    if max_per_round and not spec: wfs = wfs[:max_per_round]
 
     for wfo in wfs:
         if spec and not (spec in wfo.name): continue
@@ -762,7 +764,7 @@ if __name__ == "__main__":
 
     checkor(url, spec, options=options)
     
-    #if options.html:
-    htmlor()
+    if not spec or options.html:
+        htmlor()
 
 
