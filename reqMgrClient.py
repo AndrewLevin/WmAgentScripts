@@ -362,7 +362,7 @@ def requestManagerGet(url, request, retries=4):
 #        raise Exception("no correspondonting reqmgr2 call for %s" % request)
 #    return data
     
-def requestManager1Post(url, request, params, head = def_headers1, nested=False):
+def requestManager1Post(url, request, params, head = def_headers1, nested=True):
     """
     Performs some operation on ReqMgr through
     an HTTP POST method.

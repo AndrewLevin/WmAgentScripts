@@ -5,7 +5,7 @@ import os
 import sys
 
 
-def make_assignment_params(schema,site, processing_version):
+def make_assignment_params(schema, site, processing_version):
     procstring = {}
     
     maxrss = {}
@@ -16,6 +16,10 @@ def make_assignment_params(schema,site, processing_version):
         sys.exit(1)
     
     acqera = schema['CMSSWVersion']
+
+    # just cast site to list if needed
+    if isinstance(site, basestring):
+        site = [site]
 
     #use this as the default maxrss
     maxrss_main = 3072000

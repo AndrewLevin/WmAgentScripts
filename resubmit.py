@@ -48,12 +48,12 @@ def modifySchema(helper, workflow, user, group, cache, events, firstLumi, backfi
     # list of keys to be removed from the new request schema
     paramBlacklist = ['AcquisitionEra', 'BlockCloseMaxEvents', 'BlockCloseMaxFiles', 'BlockCloseMaxSize',
                       'BlockCloseMaxWaitTime', 'CouchURL', 'CouchWorkloadDBName', 'CustodialGroup',
-                      'CustodialSubType', 'Dashboard', 'GracePeriod', 'Group', 'HardTimeout', 'InitialPriority',
+                      'CustodialSubType', 'Dashboard', 'GracePeriod', 'HardTimeout', 'InitialPriority',
                       'inputMode', 'MaxMergeEvents', 'MaxMergeSize', 'MaxRSS', 'MaxVSize', 'MinMergeSize',
                       'NonCustodialGroup', 'NonCustodialSubType', 'ProcessingString', 'OutputDatasets',
                       'ReqMgr2Only', 'RequestDate' 'RequestorDN', 'RequestName', 'RequestStatus',
                       'RequestTransition', 'RequestWorkflow', 'SiteWhitelist', 'SoftTimeout',
-                      'SoftwareVersions', 'SubscriptionPriority', 'Team', 'timeStamp']
+                      'SoftwareVersions', 'SubscriptionPriority', 'Team', 'timeStamp', 'TrustSitelists', 'TrustPUSitelists']
 
     result = {}
     for key, value in helper.data.request.schema.dictionary_whole_tree_().items():
@@ -166,9 +166,9 @@ def cloneWorkflow(workflow, user, group, verbose=True, backfill=False, testbed=F
     print 'Submitting workflow'
     # Submit cloned workflow to ReqMgr
     if testbed:
-        newWorkflow = reqMgrClient.submitWorkflow(url_tb, schema)
+        newWorkflow = reqMgrClient.submitWorkflow(url_tb, schema, reqmgr2 = True)
     else:
-        newWorkflow = reqMgrClient.submitWorkflow(url, schema)
+        newWorkflow = reqMgrClient.submitWorkflow(url, schema, reqmgr2 = True)
     if verbose:
         print "RESPONSE", newWorkflow
 

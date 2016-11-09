@@ -2913,9 +2913,15 @@ def checkIfBlockIsSubscribedToASite(url,block,site):
 
     assert(len(result['phedex']['dataset']) == 1)
 
-    for subscription in result['phedex']['dataset'][0]['subscription']:
-        if subscription['node'] == site:
-            return True
+
+    #print '/phedex/datasvc/json/prod/subscriptions?block='+block.replace('#','%23')
+
+    #print result['phedex']['dataset'][0]['block'][0]['subscription']
+
+    if 'subscription' in result['phedex']['dataset'][0].keys():
+        for subscription in result['phedex']['dataset'][0]['subscription']:
+            if subscription['node'] == site:
+                return True
 
     if 'block' in result['phedex']['dataset'][0]:    
 

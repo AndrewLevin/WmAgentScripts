@@ -58,6 +58,8 @@ for batches_row in batches_rows:
         conn  =  httplib.HTTPSConnection(url, cert_file = os.getenv('X509_USER_PROXY'), key_file = os.getenv('X509_USER_PROXY'))
         r1=conn.request('GET','/reqmgr2/data/request/' + workflow, headers = headers)
         r2=conn.getresponse()
+
+
         j1 = json.loads(r2.read())
 
         if r2.status != 200:
@@ -76,12 +78,13 @@ for batches_row in batches_rows:
 
         status= j1['RequestStatus']
 
-        if status == "completed" or status == "assignment-approved" or status == "assigned" or status == "running-open" or status == "running-closed" or status == "acquired":        
-            if status == "completed" or status == "assignment-approved":
+        if status == "completed" or status == "assignment-approved" or status == "assigned" or status == "running-open" or status == "running-closed" or status == "acquired" or status == "failed":        
+            if status == "completed" or status == "assignment-approved" or status == "failed":
                 reqMgrClient.rejectWorkflow(url,workflow)
             if status == "assigned" or status == "running-open" or status == "running-closed" or status == "acquired":
                 reqMgrClient.abortWorkflow(url,workflow)
-        elif status != "aborted-archived" and status != "aborted" and status != "rejected" and status != "rejected-archived":
+        elif status != "aborted-archived" and status != "aborted" and status != "rejected" and status != "rejected-archived" and status != "normal-archived":
+
             os.system('echo '+workflow+' | mail -s \"batch_killor.py error 1\" andrew.m.levin@vanderbilt.edu --')
             sys.exit(1)
         else:

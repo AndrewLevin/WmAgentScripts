@@ -19,6 +19,15 @@ def getRequestJson(workflow):
 
     r1=conn.request('GET','/reqmgr2/data/request/' + workflow, headers=headers)
     r2=conn.getresponse()
+
+    if r2.status != 200:
+        time.sleep(10)
+
+        conn = httplib.HTTPSConnection(reqmgr_url, cert_file = os.getenv('X509_USER_PROXY'), key_file = os.getenv('X509_USER_PROXY'))
+
+        r1=conn.request('GET','/reqmgr2/data/request/' + workflow, headers=headers)
+        r2=conn.getresponse()
+
     request = json.loads(r2.read())
 
     if ('result' not in request) or (len(request['result']) != 1) or (workflow not in request['result'][0]):
