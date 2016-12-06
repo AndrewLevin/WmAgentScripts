@@ -117,7 +117,32 @@ def main():
                                 for block in list_of_blocks:
 
                                     #this block (/DoubleMu/...) is not registered in phedex, so it cannot be subscribed to any site
-                                    if block ==  "/DoubleMu/Run2011A-ZMu-08Nov2011-v1/RAW-RECO#93c53d22-25b2-11e1-8c62-003048f02c8a":
+                                    if block ==  "/DoubleMu/Run2011A-ZMu-08Nov2011-v1/RAW-RECO#93c53d22-25b2-11e1-8c62-003048f02c8a" or block == "/SingleElectron/Run2012D-WElectron-22Jan2013-v1/USER#5f554c0e-99f0-11e2-8bba-003048f02d38" or block == "/SingleElectron/Run2012D-WElectron-22Jan2013-v1/USER#43286e30-9955-11e2-8bba-003048f02d38":
+
+
+# or block == "/SingleElectron/Run2012D-WElectron-22Jan2013-v1/USER#5f554c0e-99f0-11e2-8bba-003048f02d38" or block == "/SingleElectron/Run2012D-WElectron-22Jan2013-v1/USER#fd95b930-a0bc-11e2-8aa2-003048f02d38" or block == "/SingleElectron/Run2012D-WElectron-22Jan2013-v1/USER#423501c4-9472-11e2-8454-003048f02d38":
+
+# or block == "/SingleElectron/Run2012D-WElectron-22Jan2013-v1/USER#6ed8e9f8-9525-11e2-8454-003048f02d38":
+                                        continue
+
+                                    isblockatsite = utils.checkIfBlockIsAtASite("cmsweb.cern.ch",block,site_disk)
+
+                                    if not isblockatsite:
+                                        all_dsets_blocks_at_site=False
+                            elif 'LumiList' in value:
+
+                                lumilist=value['LumiList']
+
+                                runwhitelist=lumilist.keys()
+
+                                blocks_fname=os.popen("mktemp").read().rstrip("\n")
+                                 
+                                list_of_blocks=utils.getListOfBlocks(inputdset,str(runwhitelist))
+
+                                for block in list_of_blocks:
+
+                                    #this block (/DoubleMu/...) is not registered in phedex, so it cannot be subscribed to any site
+                                    if block ==  "/DoubleMu/Run2011A-ZMu-08Nov2011-v1/RAW-RECO#93c53d22-25b2-11e1-8c62-003048f02c8a" or block == "/SingleElectron/Run2012D-WElectron-22Jan2013-v1/USER#5f554c0e-99f0-11e2-8bba-003048f02d38" or block == "/SingleElectron/Run2012D-WElectron-22Jan2013-v1/USER#43286e30-9955-11e2-8bba-003048f02d38":
                                         continue
 
                                     isblockatsite = utils.checkIfBlockIsAtASite("cmsweb.cern.ch",block,site_disk)
@@ -183,7 +208,12 @@ def main():
                                  for block in list_of_blocks:
 
                                      #this block (/DoubleMu/...) is not registered in phedex, so it cannot be subscribed to any site
-                                     if block == "/DoubleMu/Run2011A-ZMu-08Nov2011-v1/RAW-RECO#93c53d22-25b2-11e1-8c62-003048f02c8a":
+                                     if block == "/DoubleMu/Run2011A-ZMu-08Nov2011-v1/RAW-RECO#93c53d22-25b2-11e1-8c62-003048f02c8a" or block == "/SingleElectron/Run2012D-WElectron-22Jan2013-v1/USER#5f554c0e-99f0-11e2-8bba-003048f02d38" or block == "/SingleElectron/Run2012D-WElectron-22Jan2013-v1/USER#43286e30-9955-11e2-8bba-003048f02d38":
+
+
+# or block == "/SingleElectron/Run2012D-WElectron-22Jan2013-v1/USER#5f554c0e-99f0-11e2-8bba-003048f02d38" or block == "/SingleElectron/Run2012D-WElectron-22Jan2013-v1/USER#fd95b930-a0bc-11e2-8aa2-003048f02d38" or block == "/SingleElectron/Run2012D-WElectron-22Jan2013-v1/USER#423501c4-9472-11e2-8454-003048f02d38":
+
+# or block == "/SingleElectron/Run2012D-WElectron-22Jan2013-v1/USER#6ed8e9f8-9525-11e2-8454-003048f02d38":
                                          continue
 
                                      isblocksubscribedtosite=utils.checkIfBlockIsSubscribedToASite("cmsweb.cern.ch",block,site_disk)
@@ -193,6 +223,28 @@ def main():
                                          blocks_dsets_to_transfer.append(block)
                                      if not isblockatsite:
                                          blocks_not_at_site.append(block)
+                             elif 'LumiList' in value:
+
+                                 lumilist=value['LumiList']
+
+                                 runwhitelist=lumilist.keys()
+
+                                 list_of_blocks=utils.getListOfBlocks(inputdset,str(runwhitelist))
+
+                                 for block in list_of_blocks:
+
+                                     #this block (/DoubleMu/...) is not registered in phedex, so it cannot be subscribed to any site
+                                     if block == "/DoubleMu/Run2011A-ZMu-08Nov2011-v1/RAW-RECO#93c53d22-25b2-11e1-8c62-003048f02c8a" or block == "/SingleElectron/Run2012D-WElectron-22Jan2013-v1/USER#5f554c0e-99f0-11e2-8bba-003048f02d38" or block == "/SingleElectron/Run2012D-WElectron-22Jan2013-v1/USER#43286e30-9955-11e2-8bba-003048f02d38":
+                                         continue
+
+                                     isblocksubscribedtosite=utils.checkIfBlockIsSubscribedToASite("cmsweb.cern.ch",block,site_disk)
+                                     isblockatsite=utils.checkIfBlockIsAtASite("cmsweb.cern.ch",block,site_disk)
+
+                                     if not isblocksubscribedtosite:
+                                         blocks_dsets_to_transfer.append(block)
+                                     if not isblockatsite:
+                                         blocks_not_at_site.append(block)
+
 
                              else:   
                                  isdatasetsubscribedtosite=utils.checkIfDatasetIsSubscribedToASite("cmsweb.cern.ch",inputdset,site_disk)
@@ -212,7 +264,11 @@ def main():
 
                 print blocks_dsets_to_transfer
 
-                result=utils.makeReplicaRequest(url="cmsweb.cern.ch", site=site_disk, datasets=blocks_dsets_to_transfer, comments="relval datasets", group = "RelVal")
+                result=utils.makeReplicaRequest(url="cmsweb.cern.ch", site=site_disk, datasets=blocks_dsets_to_transfer, comments="relval datasets", group = "RelVal", priority = "high")
+
+                if result == None:
+                    os.system('echo '+wf[0]+' | mail -s \"input_dset_checkor.py error 2\" andrew.m.levin@vanderbilt.edu')
+                    sys.exit(1)
 
                 phedexid = result['phedex']['request_created'][0]['id']
 
